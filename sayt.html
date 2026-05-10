@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programist Elnur | Texniki Dəstək və Kiber Təhlükəsizlik</title>
+  <meta name="description" content="Programist Elnur - cihaz təhlükəsizliyi, hesab qorunması, texniki diaqnostika, şəbəkə qurulumu, məlumat bərpası və mobil dəstək." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #05070d;
+      --bg-2: #08111f;
+      --panel: rgba(15, 25, 43, 0.62);
+      --panel-strong: rgba(16, 28, 49, 0.84);
+      --text: #f4fbff;
+      --muted: #9db0c6;
+      --line: rgba(128, 255, 229, 0.18);
+      --cyan: #44ffe0;
+      --blue: #4b7dff;
+      --lime: #b9ff5a;
+      --amber: #ffcf66;
+      --danger: #ff5f8f;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(68, 255, 224, 0.16), transparent 28%),
+        radial-gradient(circle at 85% 8%, rgba(75, 125, 255, 0.17), transparent 26%),
+        radial-gradient(circle at 70% 80%, rgba(185, 255, 90, 0.11), transparent 32%),
+        linear-gradient(140deg, #03050a 0%, #07101e 48%, #05070d 100%);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background-image:
+        linear-gradient(rgba(68, 255, 224, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(68, 255, 224, 0.07) 1px, transparent 1px);
+      background-size: 74px 74px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.92), transparent 90%);
+      animation: gridMove 18s linear infinite;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -40%;
+      z-index: -2;
+      background:
+        conic-gradient(from 120deg, transparent, rgba(68, 255, 224, 0.12), transparent, rgba(75, 125, 255, 0.13), transparent);
+      filter: blur(70px);
+      opacity: 0.65;
+      animation: gradientShift 18s ease-in-out infinite alternate;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    canvas#particles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.76;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.055;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+    }
+
+    .shell {
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      z-index: 20;
+      width: min(calc(100% - 28px), var(--max));
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px 12px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      background: rgba(5, 9, 17, 0.68);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #03100e;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 0 34px rgba(68, 255, 224, 0.46);
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-cta {
+      padding: 11px 16px;
+      border-radius: 999px;
+      color: #03100e;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 0 26px rgba(68, 255, 224, 0.22);
+      transition: 0.25s ease;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 42px rgba(68, 255, 224, 0.5);
+    }
+
+    section {
+      width: min(calc(100% - 34px), var(--max));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: 54px;
+      padding: 132px 0 84px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      padding: 9px 13px;
+      border: 1px solid rgba(68, 255, 224, 0.24);
+      border-radius: 999px;
+      color: var(--cyan);
+      background: rgba(68, 255, 224, 0.07);
+      box-shadow: inset 0 0 18px rgba(68, 255, 224, 0.08);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.83rem;
+    }
+
+    .signal-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 18px var(--lime);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: clamp(3.2rem, 8vw, 7.6rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
+      margin-bottom: 24px;
+    }
+
+    .headline-kicker {
+      display: block;
+      color: rgba(244, 251, 255, 0.58);
+      font-size: clamp(1.55rem, 3vw, 2.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+    }
+
+    .typing {
+      display: inline-block;
+      min-height: 0.95em;
+      background: linear-gradient(110deg, var(--text), var(--cyan), var(--lime), var(--text));
+      background-size: 240% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textShine 4.8s ease-in-out infinite;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.08em;
+      margin-left: 0.06em;
+      color: var(--cyan);
+      animation: blink 0.9s steps(1) infinite;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 1.4vw, 1.22rem);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 38px;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: -1;
+      opacity: 0;
+      background: linear-gradient(135deg, var(--cyan), var(--blue), var(--lime));
+      filter: blur(14px);
+      transition: opacity 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(68, 255, 224, 0.5);
+      box-shadow: 0 0 34px rgba(68, 255, 224, 0.22);
+    }
+
+    .btn:hover::before {
+      opacity: 0.78;
+    }
+
+    .btn-primary {
+      color: #02100f;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 14px 42px rgba(68, 255, 224, 0.18);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(18px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 650px;
+    }
+
+    .stat {
+      padding: 17px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.045);
+      backdrop-filter: blur(16px);
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--cyan);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 1.14rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .profile-wrap {
+      position: relative;
+      min-height: 560px;
+      display: grid;
+      place-items: center;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(1px);
+      opacity: 0.85;
+      animation: float 7s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 150px;
+      height: 150px;
+      top: 50px;
+      right: 28px;
+      background: radial-gradient(circle, rgba(68, 255, 224, 0.85), transparent 68%);
+    }
+
+    .orb-2 {
+      width: 110px;
+      height: 110px;
+      bottom: 70px;
+      left: 10px;
+      background: radial-gradient(circle, rgba(185, 255, 90, 0.72), transparent 70%);
+      animation-delay: -2s;
+    }
+
+    .orb-3 {
+      width: 86px;
+      height: 86px;
+      top: 110px;
+      left: 60px;
+      background: radial-gradient(circle, rgba(75, 125, 255, 0.76), transparent 70%);
+      animation-delay: -4s;
+    }
+
+    .profile-card {
+      position: relative;
+      width: min(100%, 430px);
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)),
+        rgba(9, 17, 31, 0.72);
+      backdrop-filter: blur(26px);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      animation: cardFloat 6s ease-in-out infinite;
+    }
+
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: -1;
+      border-radius: inherit;
+      background: linear-gradient(140deg, rgba(68,255,224,0.45), transparent 34%, rgba(185,255,90,0.3), transparent 74%, rgba(75,125,255,0.42));
+      opacity: 0.75;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 26px;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.85rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .dots i:nth-child(1) { background: var(--danger); }
+    .dots i:nth-child(2) { background: var(--amber); }
+    .dots i:nth-child(3) { background: var(--lime); }
+
+    .avatar {
+      width: 138px;
+      height: 138px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 22px;
+      border-radius: 36px;
+      color: #03100e;
+      background:
+        linear-gradient(135deg, rgba(68, 255, 224, 1), rgba(185, 255, 90, 1));
+      box-shadow: 0 0 52px rgba(68, 255, 224, 0.32);
+      font-size: 3.8rem;
+      font-weight: 800;
+      letter-spacing: -0.1em;
+    }
+
+    .profile-card h2 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+      letter-spacing: -0.04em;
+    }
+
+    .role {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      padding: 8px 11px;
+      border: 1px solid rgba(68, 255, 224, 0.18);
+      border-radius: 999px;
+      color: #cde8ee;
+      background: rgba(68, 255, 224, 0.07);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    .info-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    .info-line strong {
+      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .online-badge {
+      position: absolute;
+      right: -18px;
+      top: 96px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 15px;
+      border: 1px solid rgba(185, 255, 90, 0.42);
+      border-radius: 999px;
+      color: #eaffcf;
+      background: rgba(9, 19, 16, 0.82);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 38px rgba(185, 255, 90, 0.25);
+      animation: badgeFloat 3.2s ease-in-out infinite;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.86rem;
+      white-space: nowrap;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 38px;
+    }
+
+    .section-label {
+      display: inline-flex;
+      margin-bottom: 14px;
+      color: var(--cyan);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.9rem;
+    }
+
+    .section-head h2 {
+      max-width: 720px;
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+    }
+
+    .section-head p {
+      max-width: 390px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .services {
+      padding: 100px 0 82px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .service-card {
+      position: relative;
+      min-height: 285px;
+      overflow: hidden;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.105);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.026)),
+        rgba(8, 15, 28, 0.7);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .service-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -40% -58% -40%;
+      height: 180px;
+      background: radial-gradient(circle, rgba(68, 255, 224, 0.24), transparent 68%);
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-12px);
+      border-color: rgba(68, 255, 224, 0.34);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34), 0 0 42px rgba(68, 255, 224, 0.12);
+    }
+
+    .service-card:hover::before {
+      opacity: 1;
+      transform: translateY(-18px);
+    }
+
+    .service-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 30px;
+      border-radius: 19px;
+      color: #04110f;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 0 34px rgba(68, 255, 224, 0.22);
+      font-size: 1.55rem;
+      transition: transform 0.35s ease;
+    }
+
+    .service-card:hover .service-icon {
+      transform: rotate(-8deg) scale(1.08);
+      animation: iconPulse 1.4s ease-in-out infinite;
+    }
+
+    .service-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.32rem;
+      letter-spacing: -0.035em;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .service-index {
+      position: absolute;
+      right: 22px;
+      top: 20px;
+      color: rgba(255, 255, 255, 0.13);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 2.8rem;
+      font-weight: 800;
+    }
+
+    .contact {
+      padding: 96px 0 110px;
+    }
+
+    .contact-panel {
+      display: grid;
+      grid-template-columns: 0.88fr 1.12fr;
+      gap: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.045);
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+    }
+
+    .contact-left,
+    .contact-form {
+      border-radius: 26px;
+      padding: 32px;
+    }
+
+    .contact-left {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(68, 255, 224, 0.24), transparent 34%),
+        linear-gradient(145deg, rgba(12, 25, 45, 0.94), rgba(7, 13, 24, 0.82));
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .contact-left::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -110px;
+      bottom: -130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(185, 255, 90, 0.36), transparent 68%);
+      animation: float 7s ease-in-out infinite;
+    }
+
+    .contact-left h2 {
+      position: relative;
+      z-index: 1;
+      max-width: 440px;
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 4vw, 3.55rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    .contact-left p {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 28px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.055);
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .contact-link:hover {
+      transform: translateX(8px);
+      border-color: rgba(68, 255, 224, 0.34);
+      background: rgba(68, 255, 224, 0.08);
+    }
+
+    .contact-link span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .contact-link strong {
+      display: block;
+      margin-top: 4px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.94rem;
+    }
+
+    .contact-form {
+      background: rgba(4, 8, 15, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      color: #c7d8e7;
+      font-size: 0.93rem;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      outline: none;
+      border-radius: 16px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      padding: 15px 16px;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    textarea {
+      min-height: 155px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(68, 255, 224, 0.58);
+      background: rgba(68, 255, 224, 0.055);
+      box-shadow: 0 0 0 4px rgba(68, 255, 224, 0.08);
+    }
+
+    .form-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .footer {
+      width: min(calc(100% - 34px), var(--max));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+      color: rgba(157, 176, 198, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      text-align: center;
+    }
+
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity 0.75s ease, transform 0.75s cubic-bezier(.2,.8,.2,1);
+      transition-delay: var(--delay, 0ms);
+    }
+
+    [data-animate].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero [data-animate] {
+      animation: heroIn 0.9s cubic-bezier(.2,.8,.2,1) forwards;
+      animation-delay: var(--delay, 0ms);
+    }
+
+    @keyframes heroIn {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes gridMove {
+      from {
+        background-position: 0 0, 0 0;
+      }
+      to {
+        background-position: 74px 74px, 74px 74px;
+      }
+    }
+
+    @keyframes gradientShift {
+      from {
+        transform: rotate(0deg) scale(1);
+      }
+      to {
+        transform: rotate(26deg) scale(1.12);
+      }
+    }
+
+    @keyframes textShine {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.45);
+        opacity: 0.62;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate3d(0, 0, 0);
+      }
+      50% {
+        transform: translate3d(0, -22px, 0);
+      }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(0.6deg);
+      }
+    }
+
+    @keyframes badgeFloat {
+      0%, 100% {
+        transform: translateY(0);
+        box-shadow: 0 0 32px rgba(185, 255, 90, 0.2);
+      }
+      50% {
+        transform: translateY(-10px);
+        box-shadow: 0 0 52px rgba(185, 255, 90, 0.38);
+      }
+    }
+
+    @keyframes iconPulse {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(68, 255, 224, 0.24);
+      }
+      50% {
+        box-shadow: 0 0 52px rgba(185, 255, 90, 0.34);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .nav {
+        top: 12px;
+        border-radius: 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 38px;
+        padding-top: 118px;
+      }
+
+      .profile-wrap {
+        min-height: auto;
+      }
+
+      .service-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .contact-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 680px) {
+      section {
+        width: min(calc(100% - 24px), var(--max));
+      }
+
+      .nav {
+        width: calc(100% - 20px);
+        padding: 10px;
+      }
+
+      .brand span {
+        font-size: 0.95rem;
+      }
+
+      .nav-cta {
+        padding: 10px 12px;
+        font-size: 0.88rem;
+      }
+
+      .hero {
+        padding-bottom: 62px;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 16vw, 4.7rem);
+      }
+
+      .hero-actions,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .stats {
+        display: grid;
+      }
+
+      .profile-card {
+        padding: 20px;
+        border-radius: 28px;
+      }
+
+      .online-badge {
+        top: 82px;
+        right: 8px;
+      }
+
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .services,
+      .contact {
+        padding-top: 72px;
+      }
+
+      .contact-left,
+      .contact-form {
+        padding: 22px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-link {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <nav class="nav" aria-label="Əsas naviqasiya">
+    <a class="brand" href="#hero" aria-label="Programist Elnur ana səhifə">
+      <span class="brand-mark">E</span>
+      <span>Programist Elnur</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#hero">Ana səhifə</a>
+      <a href="#services">Xidmətlər</a>
+      <a href="#contact">Əlaqə</a>
+    </div>
+
+    <a class="nav-cta" href="tel:0774664141">Zəng et</a>
+  </nav>
+
+  <main class="shell">
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <div class="eyebrow" data-animate style="--delay: 80ms">
+          <span class="signal-dot"></span>
+          Premium texniki dəstək
+        </div>
+
+        <h1 data-animate style="--delay: 180ms">
+          <span class="headline-kicker">Rəqəmsal təhlükəsizlik üçün</span>
+          <span class="typing" id="typingText"></span><span class="cursor">|</span>
+        </h1>
+
+        <p class="hero-copy" data-animate style="--delay: 300ms">
+          Cihazlarınız, hesablarınız və şəbəkəniz üçün sürətli diaqnostika, təhlükəsiz qurulum və etibarlı texniki dəstək. Problemi tapıram, sistemi qoruyuram, işi nəticəyə gətirirəm.
+        </p>
+
+        <div class="hero-actions" data-animate style="--delay: 420ms">
+          <a class="btn btn-primary" href="https://wa.me/774664141" target="_blank" rel="noopener">
+            WhatsApp ilə yaz
+          </a>
+          <a class="btn btn-secondary" href="#services">
+            Xidmətlərə bax
+          </a>
+        </div>
+
+        <div class="stats" data-animate style="--delay: 540ms">
+          <div class="stat">
+            <strong>24/7</strong>
+            <span>Onlayn dəstək</span>
+          </div>
+          <div class="stat">
+            <strong>6+</strong>
+            <span>Əsas xidmət sahəsi</span>
+          </div>
+          <div class="stat">
+            <strong>100%</strong>
+            <span>Məxfilik yanaşması</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-wrap" data-animate style="--delay: 360ms">
+        <div class="orb orb-1" aria-hidden="true"></div>
+        <div class="orb orb-2" aria-hidden="true"></div>
+        <div class="orb orb-3" aria-hidden="true"></div>
+
+        <article class="profile-card">
+          <div class="terminal-top">
+            <div class="dots" aria-hidden="true">
+              <i></i>
+              <i></i>
+              <i></i>
+            </div>
+            <span>secure.session</span>
+          </div>
+
+          <div class="avatar" aria-hidden="true">PE</div>
+          <h2>Programist Elnur</h2>
+          <p class="role">Texniki dəstək və təhlükəsizlik mütəxəssisi</p>
+
+          <div class="chip-row">
+            <span class="chip">Security</span>
+            <span class="chip">Recovery</span>
+            <span class="chip">Network</span>
+            <span class="chip">Mobile</span>
+          </div>
+
+          <div class="info-line">
+            <span>Telefon</span>
+            <strong>0774664141</strong>
+          </div>
+
+          <div class="info-line">
+            <span>Status</span>
+            <strong>Aktiv</strong>
+          </div>
+
+          <div class="online-badge">
+            <span class="signal-dot"></span>
+            Online 24/7
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="services" class="services">
+      <div class="section-head">
+        <div>
+          <span class="section-label" data-animate>// xidmətlər</span>
+          <h2 data-animate style="--delay: 90ms">Cihaz, hesab və şəbəkə üçün tam texniki qoruma.</h2>
+        </div>
+        <p data-animate style="--delay: 160ms">
+          Hər xidmət problemin kök səbəbini tapmaq, təhlükəsizliyi artırmaq və sistemi stabil işlək vəziyyətə gətirmək üçün qurulub.
+        </p>
+      </div>
+
+      <div class="service-grid">
+        <article class="service-card" data-animate style="--delay: 0ms">
+          <span class="service-index">01</span>
+          <div class="service-icon">🛡</div>
+          <h3>Cihaz təhlükəsizliyi</h3>
+          <p>Telefon, kompüter və digər cihazlarda təhlükə yoxlanışı, qoruma ayarları və təhlükəsiz istifadə optimizasiyası.</p>
+        </article>
+
+        <article class="service-card" data-animate style="--delay: 90ms">
+          <span class="service-index">02</span>
+          <div class="service-icon">🔐</div>
+          <h3>Hesab qorunması</h3>
+          <p>Sosial media və şəxsi hesablar üçün giriş təhlükəsizliyi, iki mərhələli doğrulama və risklərin azaldılması.</p>
+        </article>
+
+        <article class="service-card" data-animate style="--delay: 180ms">
+          <span class="service-index">03</span>
+          <div class="service-icon">⚙</div>
+          <h3>Texniki diaqnostika</h3>
+          <p>Sistem yavaşlığı, proqram xətaları, donma və performans problemlərinin analiz edilməsi və həll planı.</p>
+        </article>
+
+        <article class="service-card" data-animate style="--delay: 270ms">
+          <span class="service-index">04</span>
+          <div class="service-icon">📡</div>
+          <h3>Şəbəkə qurulumu</h3>
+          <p>Wi-Fi, router, modem və lokal bağlantıların təhlükəsiz, stabil və sürətli işləməsi üçün qurulması.</p>
+        </article>
+
+        <article class="service-card" data-animate style="--delay: 360ms">
+          <span class="service-index">05</span>
+          <div class="service-icon">💾</div>
+          <h3>Məlumat bərpası</h3>
+          <p>Silinmiş və ya əlçatmaz faylların bərpası üçün ilkin analiz, təhlükəsiz çıxarma və strukturlaşdırılmış yanaşma.</p>
+        </article>
+
+        <article class="service-card" data-animate style="--delay: 450ms">
+          <span class="service-index">06</span>
+          <div class="service-icon">📱</div>
+          <h3>Mobil dəstək</h3>
+          <p>Android və iPhone cihazlarında tətbiq, yaddaş, hesab, bağlantı və istifadə problemlərinə operativ dəstək.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="contact-panel">
+        <div class="contact-left" data-animate>
+          <span class="section-label">// əlaqə</span>
+          <h2>Probleminizi yazın, həll yolunu birlikdə seçək.</h2>
+          <p>
+            WhatsApp, Telegram və ya TikTok üzərindən müraciət edə bilərsiniz. Qısa təsvir və cihaz modelini yazmağınız prosesi sürətləndirir.
+          </p>
+
+          <div class="contact-links">
+            <a class="contact-link" href="tel:0774664141">
+              <div>
+                <span>Telefon</span>
+                <strong>0774664141</strong>
+              </div>
+              <b>→</b>
+            </a>
+
+            <a class="contact-link" href="https://wa.me/774664141" target="_blank" rel="noopener">
+              <div>
+                <span>WhatsApp</span>
+                <strong>https://wa.me/774664141</strong>
+              </div>
+              <b>→</b>
+            </a>
+
+            <a class="contact-link" href="https://t.me/774664141" target="_blank" rel="noopener">
+              <div>
+                <span>Telegram</span>
+                <strong>@774664141</strong>
+              </div>
+              <b>→</b>
+            </a>
+
+            <a class="contact-link" href="https://www.tiktok.com/@n1_sosial_izleme_011" target="_blank" rel="noopener">
+              <div>
+                <span>TikTok</span>
+                <strong>@n1_sosial_izleme_011</strong>
+              </div>
+              <b>→</b>
+            </a>
+          </div>
+        </div>
+
+        <form class="contact-form" id="messageForm" data-animate style="--delay: 120ms">
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Adınız</label>
+              <input id="name" name="name" type="text" placeholder="Adınızı yazın" required>
+            </div>
+
+            <div class="field">
+              <label for="phone">Telefon</label>
+              <input id="phone" name="phone" type="tel" placeholder="077..." required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="service">Lazım olan xidmət</label>
+            <input id="service" name="service" type="text" placeholder="Məsələn: hesab qorunması, data bərpası">
+          </div>
+
+          <div class="field">
+            <label for="message">Mesajınız</label>
+            <textarea id="message" name="message" placeholder="Problemi qısa şəkildə təsvir edin..." required></textarea>
+          </div>
+
+          <button class="btn btn-primary" type="submit">
+            Mesajı WhatsApp-a göndər
+          </button>
+
+          <p class="form-note">
+            Form məlumatları serverə göndərilmir. Mesajınız WhatsApp pəncərəsində hazır mətn kimi açılır.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © <span id="year"></span> Programist Elnur. Texniki dəstək, təhlükəsizlik və rəqəmsal həllər.
+  </footer>
+
+  <script>
+    const typingTarget = document.getElementById("typingText");
+    const words = ["Programist Elnur", "təhlükəsiz sistemlər", "sürətli texniki dəstək"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    function typeHeadline() {
+      const current = words[wordIndex];
+      const visible = current.slice(0, charIndex);
+      typingTarget.textContent = visible;
+
+      if (!deleting && charIndex < current.length) {
+        charIndex += 1;
+        setTimeout(typeHeadline, 82);
+        return;
+      }
+
+      if (!deleting && charIndex === current.length) {
+        deleting = true;
+        setTimeout(typeHeadline, 1450);
+        return;
+      }
+
+      if (deleting && charIndex > 0) {
+        charIndex -= 1;
+        setTimeout(typeHeadline, 42);
+        return;
+      }
+
+      deleting = false;
+      wordIndex = (wordIndex + 1) % words.length;
+      setTimeout(typeHeadline, 260);
+    }
+
+    typeHeadline();
+
+    const animatedItems = document.querySelectorAll("[data-animate]");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.18,
+      rootMargin: "0px 0px -40px 0px"
+    });
+
+    animatedItems.forEach((item) => observer.observe(item));
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("messageForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const form = new FormData(event.currentTarget);
+      const name = form.get("name").trim();
+      const phone = form.get("phone").trim();
+      const service = form.get("service").trim();
+      const message = form.get("message").trim();
+
+      const text = [
+        "Salam, Programist Elnur.",
+        `Ad: ${name}`,
+        `Telefon: ${phone}`,
+        service ? `Xidmət: ${service}` : "",
+        `Mesaj: ${message}`
+      ].filter(Boolean).join("%0A");
+
+      window.open(`https://wa.me/774664141?text=${text}`, "_blank", "noopener");
+    });
+
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let width = 0;
+    let height = 0;
+    let mouse = { x: null, y: null };
+
+    function resizeCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      const count = Math.min(92, Math.floor((width * height) / 14500));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.42,
+        vy: (Math.random() - 0.5) * 0.42,
+        r: Math.random() * 1.8 + 0.7,
+        glow: Math.random() > 0.72
+      }));
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -20) p.x = width + 20;
+        if (p.x > width + 20) p.x = -20;
+        if (p.y < -20) p.y = height + 20;
+        if (p.y > height + 20) p.y = -20;
+
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.glow ? 16 : 8);
+        gradient.addColorStop(0, p.glow ? "rgba(185,255,90,0.78)" : "rgba(68,255,224,0.66)");
+        gradient.addColorStop(1, "rgba(68,255,224,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.glow ? p.r * 2.5 : p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const a = particles[i];
+          const b = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < 138) {
+            ctx.strokeStyle = `rgba(68,255,224,${(1 - dist / 138) * 0.16})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      if (mouse.x !== null && mouse.y !== null) {
+        ctx.strokeStyle = "rgba(185,255,90,0.16)";
+        ctx.lineWidth = 1;
+        particles.forEach((p) => {
+          const dist = Math.hypot(mouse.x - p.x, mouse.y - p.y);
+          if (dist < 180) {
+            ctx.beginPath();
+            ctx.moveTo(mouse.x, mouse.y);
+            ctx.lineTo(p.x, p.y);
+            ctx.stroke();
+          }
+        });
+      }
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("mousemove", (event) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+    });
+
+    window.addEventListener("mouseleave", () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    resizeCanvas();
+    drawParticles();
+  </script>
+</body>
+</html>
